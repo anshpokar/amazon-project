@@ -8,10 +8,6 @@
      },{
         productId : '15b6fc6f-327a-4ec4-896f-486349e85a3d',
         quantity:65,
-        deliveryOptionId: '2'
-     },{
-        productId : '15b6fc6f-327a-4ec4-896f-486349e85a3d',
-        quantity:65,
         deliveryOptionId: '3'
      }];
  }
@@ -71,3 +67,15 @@
       matchingItem.quantity = newQuantity;
       saveToStorage();
   }
+
+export function updateDeliveryOption(productId,deliveryOptionId){
+  let matchingItem;
+  cart.forEach((cartItem)=>{
+      if (productId === cartItem.productId){
+          matchingItem = cartItem;
+      }
+  });
+
+  matchingItem.deliveryOptionId =deliveryOptionId;
+  saveToStorage();
+}
