@@ -10,6 +10,7 @@ export function getProduct(productId) {
   });
   return matchingProduct;
 }
+
 class Product{
   id;
   image;
