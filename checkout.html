@@ -44,8 +44,8 @@
 
       <div class="checkout-grid">
         <div class="order-summary js-order-summary">
-          <div class="empty-cart-message">Your cart is empty.</div>
-          <button class="view-products-link" href="amazon.html">View Products</button>
+          <div class="empty-cart-message" data-testId="empty-cart-message">Your cart is empty.</div>
+          <a class="view-products-link" data-testId="view-products-link" href="amazon.html">View Products</a>
           <!-- <div class="cart-item-container">
             <div class="delivery-date">
               Delivery date: Wednesday, June 15
@@ -125,7 +125,10 @@
         </div>
       </div>
     </div>
-
+    <div class="toast js-toast">
+      Order placed successfully! Redirecting to Orders...
+    </div>
     <script type="module" src="scripts/checkout.js"></script>
+    
   </body>
 </html>

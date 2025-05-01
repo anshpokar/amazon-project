@@ -7,6 +7,19 @@ import { renderPaymentSummary } from "./paymentSummary.js";
 
 
 export function renderOrderSummary(){
+    const emptyMessage = document.querySelector('[data-testid="empty-cart-message"]');
+    const viewLink = document.querySelector('[data-testid="view-products-link"]');
+
+    if (cart.length === 0) {
+        emptyMessage.style.display = 'block';
+        viewLink.style.display = 'inline-block';
+        document.querySelector('.js-payment-summary').innerHTML = '';
+        return;
+    } else {
+        emptyMessage.style.display = 'none';
+        viewLink.style.display = 'none';
+    }
+
     let cartSummaryHTMl = '';
 
     cart.forEach((cartItem) => {
@@ -32,7 +45,7 @@ export function renderOrderSummary(){
 
             <div class="cart-item-details-grid">
                 <img class="product-image"
-                src="${matchingProduct.image}">
+                src="${matchingProduct.image}" alt="${matchingProduct.name}>
 
                 <div class="cart-item-details">
                 <div class="product-name">
@@ -161,7 +174,11 @@ export function renderOrderSummary(){
             `.js-quantity-input-${productId}`
         );
 
-        const newQuantity = Number(quantityInput.value);
+        const newQuantity = parseInt(quantityInput.value.trim(),10);
+        if (isNaN(newQuantity) || newQuantity < 1 || newQuantity > 99) {
+            alert("Quantity must be between 1 and 99.");
+            return;
+        }
 
         if (newQuantity <= 0 || newQuantity >= 100) {
             alert("Quantity should be more than 0 and less than 100");

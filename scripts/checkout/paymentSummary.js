@@ -75,13 +75,19 @@ export function renderPaymentSummary(){
                     });
                     const order = await response.json();
                     addOrder(order);
-                    
-                    
+                    resetCart();
+
+                    const toast = document.querySelector('.js-toast');
+                    toast.classList.add('show');
+
+                    setTimeout(() => {
+                        window.location.href = 'orders.html';
+                    }, 2000);
+  
                 }catch(error){
-                    console.log('Unexpected error. Try again later.');
+                    alert('Failed to place order. Please try again later.');
                 }
-                resetCart();
-                window.location.href = 'orders.html';
+                
             }
             else{
                 alert('Add Items to Cart!!!');
