@@ -1,4 +1,4 @@
-import { cart,calculateCartQuantity, removeFromCart} from "../../data/cart.js";
+import { cart,calculateCartQuantity, removeFromCart, resetCart} from "../../data/cart.js";
 import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
@@ -61,27 +61,32 @@ export function renderPaymentSummary(){
 
     document.querySelector('.js-place-order')
         .addEventListener('click',async ()=>{
-            try {
-                const response = await fetch('https://supersimplebackend.dev/orders',{
-                    method : 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body : JSON.stringify({
-                        cart : cart
-                    })
-                });
-                const order = await response.json();
-                addOrder(order);
-                cart.forEach((cartItem)=>{
-                    removeFromCart(cartItem.productId);
-                });
-                
-            }catch(error){
-                console.log('Unexpected error. Try again later.');
+            const cartQuantity = calculateCartQuantity();
+            if (cartQuantity > 0){
+                try {
+                    const response = await fetch('https://supersimplebackend.dev/orders',{
+                        method : 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body : JSON.stringify({
+                            cart : cart
+                        })
+                    });
+                    const order = await response.json();
+                    addOrder(order);
+                    
+                    
+                }catch(error){
+                    console.log('Unexpected error. Try again later.');
+                }
+                resetCart();
+                window.location.href = 'orders.html';
             }
-
-            window.location.href = 'orders.html';
+            else{
+                alert('Add Items to Cart!!!');
+                window.location.href = 'amazon.html';
+            }  
         }   
     );
 } 

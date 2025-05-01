@@ -1,6 +1,5 @@
 import { cart , addToCart} from "../data/cart.js";
 import { products, loadProducts } from "../data/products.js";
-import { formatCurrency } from "./utils/money.js";
 
 loadProducts(renderProductsGrid);
 
@@ -8,7 +7,27 @@ loadProducts(renderProductsGrid);
 function renderProductsGrid() {
   let productHtml= '';
 
-  products.forEach((product)=>{
+  const url = new URL(window.location.href);
+  const search = url.searchParams.get('search');
+
+  let filteredProducts = products;
+
+  if(search){
+    filteredProducts = products.filter((product)=>{
+      // return product.name.includes(search);
+      let matchingKeyword = false;
+
+      product.keywords.forEach((keyword)=>{
+        if(keyword.toLowerCase().includes(search.toLowerCase())){
+          matchingKeyword = true;
+        }
+      });
+      return matchingKeyword || 
+      product.name.toLowerCase().includes(search.toLowerCase());
+    });
+  }
+
+  filteredProducts.forEach((product)=>{
       productHtml += `
           <div class="product-container">
             <div class="product-image-container">
@@ -77,12 +96,38 @@ function renderProductsGrid() {
   updateCartQuantity();
 
   document.querySelectorAll('.js-add-to-cart')
-      .forEach((button)=>{
-          button.addEventListener('click',()=>{
-              const productId=button.dataset.productId;
-              
-              addToCart(productId);
-              updateCartQuantity();
-          });
+    .forEach((button)=>{
+      button.addEventListener('click',()=>{
+        const productId=button.dataset.productId;
+
+        const productContainer = button.closest('.product-container');
+
+        const quantitySelect = productContainer.querySelector('select');
+        const selectedQuantity = parseInt(quantitySelect.value);
+        console.log(selectedQuantity);
+
+        addToCart(productId,selectedQuantity);
+        updateCartQuantity();
+
+        
+        const addedToCart = productContainer.querySelector('.added-to-cart');
+        addedToCart.classList.add('js-added-to-cart');
+
+        setTimeout(()=>{
+          addedToCart.classList.remove('js-added-to-cart');
+        },1000);
       });
+    });
+
+  document.querySelector(".js-search-button").addEventListener('click',()=>{
+    const search = document.querySelector('.js-search-bar').value;
+    window.location.href = `amazon.html?search=${search}`;
+  });
+
+  document.querySelector('js.search-bar').addEventListener('keydown',(event)=>{
+    if(event.key === 'Enter'){
+      const searchTerm = document.querySelector('.js-search-bar').value;
+      window.location.href=`amazon.html?search=${searchTerm}`;
+    }
+  });
 }
