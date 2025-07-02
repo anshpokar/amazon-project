@@ -95,5 +95,4 @@ export function renderPaymentSummary(){
             }  
         }   
     );
-} 
-
+}
